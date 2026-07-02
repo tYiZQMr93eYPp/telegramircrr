@@ -1,0 +1,11 @@
+channel_trackers:
+  # TG-CHANNEL-ID_MYTRACKER: MyTracker
+  # "1234567890": MyTracker
+
+group_topic_trackers:
+  # TG-GROUP-TOPIC-ID_MYTRACKER: MyTracker
+  # "1234567890_1234": MyTracker
+
+chat_trackers:
+  # TG-CHAT-ID_MYTRACKER: MyTracker
+  # "1234567890": MyTracker

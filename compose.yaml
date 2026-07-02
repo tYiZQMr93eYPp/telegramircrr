@@ -1,0 +1,30 @@
+---
+services:
+  telegramircrr:
+    image: tYiZQMr93eYPp/telegramircrr:latest
+    container_name: telegramircrr
+    environment:
+      TZ: #optional
+      TG_APP_API_ID: 
+      TG_APP_API_HASH: 
+      IRC_HOST: irc
+      TG_SESSION_PATH: #optional
+      IRC_NICKNAME: #optional
+      TRACKER_CONFIG_PATH: #optional
+      LOG_LEVEL: #optional
+      LOG_PATH: #optional
+    volumes:
+      - /path/to/tg_announcer_config:/app/irc
+      - /path/to/log_path:/app/logs/app.log # optional
+    restart: unless-stopped
+
+  irc:
+    image: inspircd/inspircd-docker:latest
+    container_name: irc
+    environment:
+      TZ: ${TZ}
+      INSP_NET_SUFFIX: "local.server"
+      INSP_NET_NAME: "Local"
+      INSP_SERVER_NAME: "irc.local.server"
+      INSP_ADMIN_NAME: "admin"
+    restart: on-failure

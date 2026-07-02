@@ -1,0 +1,22 @@
+[project]
+name = "telegramircrr"
+version = "0.3.12"
+description = "Parses Telegram announcements and announces to IRC channels"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "cryptg==0.6.0",
+    "irc==20.5.0",
+    "loguru==0.7.3",
+    "python-dotenv==1.2.2",
+    "pyyaml==6.0.3",
+    "requests==2.34.2",
+    "telethon==1.43.2",
+]
+
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

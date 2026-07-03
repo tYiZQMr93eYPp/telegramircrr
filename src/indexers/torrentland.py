@@ -7,10 +7,10 @@ from telethon import events
 
 _FIELDS = {
     "title": r"^(.+?)\n",
-    "category": r"📺\s?(.+?)\s",
+    "category": r"📺\s?(.+?)\s->",
     "size": r"💾\s?(.+?)\n",
     "uploader": r"👤\s?(.+?)\n",
-    "freeleech": r"(\d+)%",
+    "freeleech": r"(\d+?)\s?%",
     "base_url": r"\[Ficha\]\((https?://.+?)\)",
     "id": r"/torrents/(\d+?)\)",
     "double_upload": r"(Doble Subida)",

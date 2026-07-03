@@ -11,7 +11,7 @@ _FIELDS = {
     "size": r"Tama.o:\s(.+?)\n",
     "uploader": r"Uploader:\s(.+?)\n",
     "freeleech": r"Free:\s(\d+?)%",
-    "base_url": r"Link:\s(.+)\n?",
+    "base_url": r"Link:\s(.+?)$",
     "double_upload": r"(Double Upload)",
     "featured": r"(Destacado)",
     # HDZero doesn't announce the `Refundable` value

@@ -9,7 +9,7 @@ _FIELDS = {
     "title": r"🎬\s(.+?)\n",
     "category": r"Categor.a:\s(.+?)\n",
     "size": r"Tama.o:\s(.+?)\n",
-    "uploader": r"Subido por:\s(.+?)",
+    "uploader": r"Subido por:\s(.+?)$",
     # NOBS doesn't announce the `Freeleech`, `Double Upload`, `Featured`, and `Refundable` values
 }
 

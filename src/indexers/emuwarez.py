@@ -1,14 +1,14 @@
 import re
 import unicodedata
 from loguru import logger
-from models.torrent_data import TorrentData
+from models.announce_data import AnnounceData
 from telethon import events
 
 
 _FIELDS = {
-    "torrent_name": r"🎬\s(.+?)\n",
+    "title": r"🎬\s(.+?)\n",
     "category": r"Categor.a:\s#?(.+?)\n",
-    "torrent_size": r"Tama.o:\s(.+?)\n",
+    "size": r"Tama.o:\s(.+?)\n",
     "uploader": r"Subido por:\s#?(.+?)\n",
     "freeleech": r"🎁\s(\d+?)%\sFreeleech",
     "featured": r"(DESTACADO)",
@@ -22,7 +22,7 @@ def _get(pattern: str, text: str) -> str | None:
 
 class EMUWAREZ:
     @staticmethod
-    def parse_event(event: events.NewMessage.Event) -> TorrentData:
+    def parse_event(event: events.NewMessage.Event) -> AnnounceData:
         message: str = unicodedata.normalize('NFKC', event.message.message)
         logger.debug("Raw message: {!r}", event.message.message)
         logger.debug("Normalized message: {!r}", message)
@@ -34,10 +34,10 @@ class EMUWAREZ:
                 for button in row.buttons:
                     if getattr(button, "url", None) and "torrents" in button.url:
                         data["base_url"] = button.url
-                        data["torrent_id"] = re.search(r"/torrents/(\d+)", button.url).group(1)
+                        data["id"] = re.search(r"/torrents/(\d+)", button.url).group(1)
                         break
         
-        obj = TorrentData(**data)
+        obj = AnnounceData(**data)
         logger.debug("Parsed data: {}", vars(obj))
 
         return obj

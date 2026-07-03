@@ -2,11 +2,11 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from loguru import logger
-from irc_bot.utils import irc_channel_for_tracker
+from irc_bot.utils import irc_channel_for_indexer
 from telethon import TelegramClient, events, custom
 from irc_bot.ircbot import IRCBot
 from log_config import LogConfig
-from mappers.tracker_mapper import TrackerMapper
+from mappers.indexer_mapper import IndexerMapper
 from models.torrent_data import TorrentData
 
 
@@ -18,11 +18,11 @@ api_id = int(os.getenv("TG_APP_API_ID"))
 api_hash = os.getenv("TG_APP_API_HASH")
 client = TelegramClient(telethon_session, api_id, api_hash)
 
-tracker_mapper = TrackerMapper(os.getenv("TRACKER_CONFIG_PATH", "/app/irc/config.yaml"))
+indexer_mapper = IndexerMapper(os.getenv("INDEXER_CONFIG_PATH", "/app/irc/config.yaml"))
 irc_bot = IRCBot(
     os.getenv("IRC_HOST"),
     os.getenv("IRC_NICKNAME", "irc_bot"),
-    [irc_channel_for_tracker(tracker) for tracker in tracker_mapper.trackers()]
+    [irc_channel_for_indexer(indexer) for indexer in indexer_mapper.indexers()]
 )
 
 
@@ -41,25 +41,25 @@ async def read_messages(event: events.NewMessage.Event):
 
         if is_topic:
             topic_id: int = reply_to.reply_to_top_id or reply_to.reply_to_msg_id
-            tracker = tracker_mapper.get_topic(channel_id, topic_id)
-            logger.debug("Topic lookup: group_id={}, topic_id={} -> {}", channel_id, topic_id, tracker)
+            indexer = indexer_mapper.get_topic(channel_id, topic_id)
+            logger.debug("Topic lookup: group_id={}, topic_id={} -> {}", channel_id, topic_id, indexer)
         else:
-            tracker = tracker_mapper.get(channel_id)
-            logger.debug("Channel lookup: channel_id={} -> {}", channel_id, tracker)
+            indexer = indexer_mapper.get(channel_id)
+            logger.debug("Channel lookup: channel_id={} -> {}", channel_id, indexer)
     elif chat_id is not None:
-        tracker = tracker_mapper.get_chat(chat_id)
-        logger.debug("Chat lookup: chat_id={} -> {}", chat_id, tracker)
+        indexer = indexer_mapper.get_chat(chat_id)
+        logger.debug("Chat lookup: chat_id={} -> {}", chat_id, indexer)
     else:
         logger.debug("No channel_id or chat_id, skipping")
         return
 
-    if tracker is None:
-        logger.debug("No tracker found for message, skipping")
+    if indexer is None:
+        logger.debug("No indexer found for message, skipping")
         return
 
-    logger.debug("Tracker matched: {}", tracker)
-    data: TorrentData = tracker().parse_event(event)
-    data.send_data_to_irc(tracker, irc_bot)
+    logger.debug("Indexer matched: {}", indexer)
+    data: TorrentData = indexer().parse_event(event)
+    data.send_data_to_irc(indexer, irc_bot)
 
 
 if __name__ == "__main__":

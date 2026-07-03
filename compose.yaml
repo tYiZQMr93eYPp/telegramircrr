@@ -10,7 +10,7 @@ services:
       IRC_HOST: irc
       TG_SESSION_PATH: #optional
       IRC_NICKNAME: #optional
-      TRACKER_CONFIG_PATH: #optional
+      INDEXER_CONFIG_PATH: #optional
       LOG_LEVEL: #optional
       LOG_PATH: #optional
     volumes:

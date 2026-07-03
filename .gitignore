@@ -225,3 +225,5 @@ __marimo__/
 # Private files
 examples/
 .secrets
+
+.github/workflows/test-events/**

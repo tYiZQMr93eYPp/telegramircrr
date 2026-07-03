@@ -1,14 +1,14 @@
 import re, requests
 import unicodedata
 from loguru import logger
-from models.torrent_data import TorrentData
+from models.announce_data import AnnounceData
 from telethon import events
 
 
 _FIELDS = {
-    "torrent_name": r"T.tulo:\s(.+?)\n",
+    "title": r"T.tulo:\s(.+?)\n",
     "category": r"Categor.a:\s#?(.+?)\n",
-    "torrent_size": r"Tama.o:\s(.+?)\n",
+    "size": r"Tama.o:\s(.+?)\n",
     "uploader": r"Uploader:\s(.+?)\n",
     "freeleech": r"Free:\s(\d+?)%",
     "base_url": r"Link:\s(.+)\n?",
@@ -24,7 +24,7 @@ def _get(pattern: str, text: str) -> str | None:
 
 class HDZero:
     @staticmethod
-    def parse_event(event: events.NewMessage.Event) -> TorrentData:
+    def parse_event(event: events.NewMessage.Event) -> AnnounceData:
         message: str = unicodedata.normalize('NFKC', event.message.message)
         logger.debug("Raw message: {!r}", event.message.message)
         logger.debug("Normalized message: {!r}", message)
@@ -34,12 +34,12 @@ class HDZero:
         if data["base_url"]:
             response = requests.head(data["base_url"], allow_redirects=True, timeout=60)
             urls = [r.headers["Location"] for r in response.history if "Location" in r.headers] + [response.url]
-            torrent_url = next((u for u in urls if re.match(r".+?/torrents/\d+", u)), None)
-            if torrent_url:
-                data["base_url"] = torrent_url
-                data["torrent_id"] = re.search(r"/torrents/(\d+)", torrent_url).group(1)
+            base_url = next((u for u in urls if re.match(r".+?/torrents/\d+", u)), None)
+            if base_url:
+                data["base_url"] = base_url
+                data["id"] = re.search(r"/torrents/(\d+)", base_url).group(1)
 
-        obj = TorrentData(**data)
+        obj = AnnounceData(**data)
         logger.debug("Parsed data: {}", vars(obj))
 
         return obj

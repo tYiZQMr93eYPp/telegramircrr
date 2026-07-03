@@ -1,12 +1,12 @@
 # Telegram to IRC Announcer
 
-Watches configured Telegram channels for new torrent announcements, parses the messages, and forwards them to their corresponding IRC announce channels.
+Watches configured Telegram channels for new indexer announcements, parses the messages, and forwards them to their corresponding IRC announce channels.
 
 ## How it works
 
 1. Listens for new messages on configured Telegram channels, group topics, and chats via Telethon
 2. Looks up which indexer class handles that channel
-3. Parses the message into structured `TorrentData`
+3. Parses the message into structured `AnnounceData`
 4. Sends a formatted announcement to the indexer's IRC channel (e.g. `#myindexer_announce`)
 
 ## Requirements
@@ -125,7 +125,7 @@ src/
   indexers/            # One file per indexer, filename = class name lowercase
     myindexer.py
   models/
-    torrent_data.py    # Parsed torrent data + IRC send logic
+    announce_data.py    # Parsed announce data + IRC send logic
   irc_bot/
     ircbot.py          # IRC bot wrapper
     utils.py           # IRC channel name helper

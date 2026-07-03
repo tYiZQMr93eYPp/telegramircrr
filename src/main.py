@@ -7,7 +7,7 @@ from telethon import TelegramClient, events, custom
 from irc_bot.ircbot import IRCBot
 from log_config import LogConfig
 from mappers.indexer_mapper import IndexerMapper
-from models.torrent_data import TorrentData
+from models.announce_data import AnnounceData
 
 
 load_dotenv()
@@ -58,7 +58,7 @@ async def read_messages(event: events.NewMessage.Event):
         return
 
     logger.debug("Indexer matched: {}", indexer)
-    data: TorrentData = indexer().parse_event(event)
+    data: AnnounceData = indexer().parse_event(event)
     data.send_data_to_irc(indexer, irc_bot)
 
 

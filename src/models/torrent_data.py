@@ -1,4 +1,4 @@
-from irc_bot.utils import irc_channel_for_tracker
+from irc_bot.utils import irc_channel_for_indexer
 
 
 class TorrentData:
@@ -24,7 +24,7 @@ class TorrentData:
             ("featured", featured),
             ("refundable", refundable),
         ] if v)
-    def send_data_to_irc(self, tracker, irc):
+    def send_data_to_irc(self, indexer, irc):
         fields = {
             "Name": self.torrent_name,
             "Category": self.category,
@@ -36,4 +36,4 @@ class TorrentData:
             "Tags": self.tags,
         }
         message = " | ".join(f"{k}: {v}" for k, v in fields.items())
-        irc.send_message(irc_channel_for_tracker(tracker), message)
+        irc.send_message(irc_channel_for_indexer(indexer), message)

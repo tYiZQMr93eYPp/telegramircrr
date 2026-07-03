@@ -5,9 +5,9 @@ Watches configured Telegram channels for new torrent announcements, parses the m
 ## How it works
 
 1. Listens for new messages on configured Telegram channels, group topics, and chats via Telethon
-2. Looks up which tracker class handles that channel
+2. Looks up which indexer class handles that channel
 3. Parses the message into structured `TorrentData`
-4. Sends a formatted announcement to the tracker's IRC channel (e.g. `#mytracker_announce`)
+4. Sends a formatted announcement to the indexer's IRC channel (e.g. `#myindexer_announce`)
 
 ## Requirements
 
@@ -26,29 +26,30 @@ Watches configured Telegram channels for new torrent announcements, parses the m
 | `TG_SESSION_PATH` | Path to the Telethon session file | false | `/app/irc/telethon.session` |
 | `IRC_HOST` | IRC server hostname | true | None |
 | `IRC_NICKNAME` | IRC bot nickname | false | `irc_bot` |
-| `TRACKER_CONFIG_PATH` | Path to the tracker config YAML | false | `/app/irc/config.yaml` |
+| `INDEXER_CONFIG_PATH` | Path to the indexer config YAML | false | `/app/irc/config.yaml` |
 | `LOG_LEVEL` | The logging level | false | `INFO` |
 | `LOG_PATH` | The log file path | false | None |
 
-### Tracker config (`config.yaml`)
+### Indexer config (`config.yaml`)
 
-Three sections map different Telegram source types to tracker class names:
+Three sections map different Telegram source types to indexer class names:
 
 ```yaml
-# Channels
-channel_trackers:
-  1234567890: MyTracker
+channel_indexers:
+  # TG-CHANNEL-ID_MYINDEXER: MyIndexer
+  "1234567890": MyIndexer
 
-# Group/forum topics. Key format: "groupID_topicID"
-group_topic_trackers:
-  "1234567890_1": MyTracker
+group_topic_indexers:
+  # TG-GROUP-TOPIC-ID_MYINDEXER: MyIndexer
+  "1234567890_1234": MyIndexer
 
-# Chats
-chat_trackers:
-  1234567890: MyTracker
+chat_indexers:
+  # TG-CHAT-ID_MYINDEXER: MyIndexer
+  "1234567890": MyIndexer
+
 ```
 
-The IRC channel is derived automatically from the class name: `MyTracker` → `#mytracker_announce`.
+The IRC channel is derived automatically from the class name: `MyIndexer` → `#myindexer_announce`.
 
 ## Running with Docker
 
@@ -74,7 +75,7 @@ services:
       IRC_HOST: 
       TG_SESSION_PATH: #optional
       IRC_NICKNAME: #optional
-      TRACKER_CONFIG_PATH: #optional
+      INDEXER_CONFIG_PATH: #optional
       LOG_LEVEL: #optional
       LOG_PATH: #optional
     volumes:
@@ -94,7 +95,7 @@ docker run -d \
   -e IRC_HOST= \
   -e TG_SESSION_PATH= `#optional` \
   -e IRC_NICKNAME= `#optional` \
-  -e TRACKER_CONFIG_PATH= `#optional` \
+  -e INDEXER_CONFIG_PATH= `#optional` \
   -e LOG_LEVEL= `#optional` \
   -e LOG_PATH= `#optional` \
   -v /path/to/tg_announcer_config:/app/irc \
@@ -102,17 +103,17 @@ docker run -d \
   tYiZQMr93eYPp/telegramircrr:latest
 ```
 
-## Included trackers
+## Included indexers
 
-| Tracker List |
+| Indexer List |
 |---|
 | `HDZero` |
 | `EMUWAREZ` |
 | `NOBS` |
 
-## Want to add your tracker?
+## Want to add your indexer?
 
-1. Open an [issue](https://github.com/tYiZQMr93eYPp/telegramircrr/issues/new?template=indexer-integration-request.md) using the [Tracker Integration Request template](https://github.com/tYiZQMr93eYPp/telegramircrr/issues/new?template=indexer-integration-request.md).
+1. Open an [issue](https://github.com/tYiZQMr93eYPp/telegramircrr/issues/new?template=indexer-integration-request.md) using the [Indexer Integration Request template](https://github.com/tYiZQMr93eYPp/telegramircrr/issues/new?template=indexer-integration-request.md).
 2. Follow the instructions in it.
 3. Submit the issue.
 
@@ -121,14 +122,14 @@ docker run -d \
 ```
 src/
   main.py              # Entry point
-  trackers/            # One file per tracker, filename = class name lowercase
-    mytracker.py
+  indexers/            # One file per indexer, filename = class name lowercase
+    myindexer.py
   models/
     torrent_data.py    # Parsed torrent data + IRC send logic
   irc_bot/
     ircbot.py          # IRC bot wrapper
     utils.py           # IRC channel name helper
   mappers/
-    tracker_mapper.py  # Loads channel → tracker mapping from config.yaml
-config.yaml            # Tracker mappings
+    indexer_mapper.py  # Loads channel → indexer mapping from config.yaml
+config.yaml            # Indexer mappings
 ```

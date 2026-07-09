@@ -22,7 +22,7 @@ def _get(pattern: str, text: str) -> str | None:
     m = re.search(pattern, text)
     return m.group(1) if m else None
 
-class HDZero:
+class HDZERO:
     @staticmethod
     def parse_event(event: events.NewMessage.Event) -> AnnounceData:
         message: str = unicodedata.normalize('NFKC', event.message.message)

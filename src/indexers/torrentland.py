@@ -32,13 +32,6 @@ class TORRENTLAND:
         data = {key: _get(pat, message) for key, pat in _FIELDS.items()}
         logger.debug("Parsed fields: {}", data)
 
-        if data["base_url"] and data["title"]:
-            # Hyperlinks the torrent name to the torrent page in Telegram messages
-            data["title"] = f"[{data['title']}]({data['base_url']})"
-            # Overwrite the FQDN of `base_url` with a placeholder since they DON'T allow automated tools
-            # By doing this, we prevent any accidental (or not so accidental) intention of automating anything there
-            data["base_url"] = re.sub(r"https?://[^/]+", "https://example.org", data["base_url"])
-
         obj = AnnounceData(**data)
         logger.debug("Parsed data: {}", vars(obj))
 

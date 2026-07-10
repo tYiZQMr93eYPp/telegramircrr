@@ -6,9 +6,9 @@ from telethon import events
 
 
 _FIELDS = {
-    "title": r"📌\s(.+?)\n",
+    "title": r"📌\s(.+?)(?:\n|$)",
     "category": r"📂\s#?(.+?)\s?•",
-    "size": r"💾\s(.+?)\n",
+    "size": r"💾\s(.+?)(?:\n|$)",
     "base_url": r"\[Ver torrent\]\((https?://.+?)\)",
     "id": r"/torrents/(\d+?)\)",
     # Milnueve doesn't announce the `Uploader`, `Double Upload`, `Freeleech`, `Featured`, and `Refundable` values

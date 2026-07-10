@@ -19,16 +19,17 @@ Watches configured Telegram channels for new indexer announcements, parses the m
 
 ### Environment variables
 
-| Variable | Description | Mandatory | Default value |
-|---|---|---|---|
-| `TG_APP_API_ID` | Telegram app API ID | true | None |
-| `TG_APP_API_HASH` | Telegram app API hash | true | None |
-| `TG_SESSION_PATH` | Path to the Telethon session file | false | `/app/irc/telethon.session` |
-| `IRC_HOST` | IRC server hostname | true | None |
-| `IRC_NICKNAME` | IRC bot nickname | false | `irc_bot` |
-| `INDEXER_CONFIG_PATH` | Path to the indexer config YAML | false | `/app/irc/config.yaml` |
-| `LOG_LEVEL` | The logging level | false | `INFO` |
-| `LOG_PATH` | The log file path | false | None |
+| Variable | Description | Mandatory | Default value | Example |
+|---|---|---|---|---|
+| `TG_APP_API_ID` | Telegram app API ID | true | `None` | `13371337` |
+| `TG_APP_API_HASH` | Telegram app API hash | true | `None` | `oyr2i1ngqk3oc0lhac5cpn0anvuta9qk` |
+| `TG_SESSION_PATH` | Path to the Telethon session file | false | `/app/irc/telethon.session` | `/app/irc/telethon.session` |
+| `IRC_HOST` | IRC server hostname | true | `None` | `irc.example.org` |
+| `IRC_NICKNAME` | IRC bot nickname | false | `irc_bot` | `irc_bot` |
+| `INDEXER_CONFIG_PATH` | Path to the indexer config YAML | false | `/app/irc/config.yaml` | `/app/irc/config.yaml` |
+| `LOG_LEVEL` | The logging level | false | `INFO` | `INFO` |
+| `LOG_PATH` | The log file path | false | `None` | `/app/logs/telegramircrr.log` |
+| `ANNOUNCE_OVERWRITE_FQDN` | Overwrite the [`InfoURL`](https://github.com/autobrr/autobrr/blob/04ba5ccb4bc45f7fdb3f98b343c0b74b2303fb2f/internal/domain/release.go#L50)'s FQDN | false | `None` | `tracker.example.org` |
 
 ### Indexer config (`config.yaml`)
 
@@ -78,6 +79,7 @@ services:
       INDEXER_CONFIG_PATH: #optional
       LOG_LEVEL: #optional
       LOG_PATH: #optional
+      ANNOUNCE_OVERWRITE_FQDN: #optional
     volumes:
       - /path/to/tg_announcer_config:/app/irc
       - /path/to/log_path:/app/logs/app.log # optional
@@ -98,6 +100,7 @@ docker run -d \
   -e INDEXER_CONFIG_PATH= `#optional` \
   -e LOG_LEVEL= `#optional` \
   -e LOG_PATH= `#optional` \
+  -e ANNOUNCE_OVERWRITE_FQDN= `#optional` \
   -v /path/to/tg_announcer_config:/app/irc \
   -v /path/to/log_path:/app/logs/app.log `#optional` \
   tYiZQMr93eYPp/telegramircrr:latest
@@ -110,6 +113,9 @@ docker run -d \
 | `HDZero` |
 | `EMUWAREZ` |
 | `NOBS` |
+| `Torrentland` |
+| `ParabellumHD` |
+| `Milnueve` |
 
 ## Want to add your indexer?
 

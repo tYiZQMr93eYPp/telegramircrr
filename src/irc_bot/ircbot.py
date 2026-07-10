@@ -4,6 +4,8 @@ import threading
 
 
 class IRCBot:
+    # TODO: Support changing the port
+    # TODO: Support SSL/TLS connections
     def __init__(self, server, nickname, channels: list[str], port=6667):
         self._bot = _IRCBot(server, nickname, channels, port)
         self._thread = threading.Thread(target=self._bot.start, daemon=True)

@@ -13,6 +13,7 @@ services:
       INDEXER_CONFIG_PATH: #optional
       LOG_LEVEL: #optional
       LOG_PATH: #optional
+      ANNOUNCE_OVERWRITE_FQDN: #optional
     volumes:
       - /path/to/tg_announcer_config:/app/irc
       - /path/to/log_path:/app/logs/app.log # optional

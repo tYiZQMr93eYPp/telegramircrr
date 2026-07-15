@@ -371,7 +371,7 @@ wheels = [
 
 [[package]]
 name = "telegramircrr"
-version = "0.3.23a0"
+version = "0.3.24"
 source = { editable = "." }
 dependencies = [
     { name = "cryptg" },

@@ -6,10 +6,10 @@ from telethon import events
 
 
 _FIELDS = {
-    "title": r"🎬\s(.+?)(?:\n|$)",
-    "category": r"Categor.a:\s#?(.+?)(?:\n|$)",
-    "size": r"Tama.o:\s(.+?)(?:\n|$)",
-    "uploader": r"Subido por:\s#?(.+?)(?:\n|$)",
+    "title": r"🎬\s\*\*(.+?)(?:\*\*\n)",
+    "category": r"Categor.a:\*\*\s#?(.+?)(?:\n|$)",
+    "size": r"Tama.o:\*\*\s(.+?)(?:\n|$)",
+    "uploader": r"Subido por:\*\*\s#?(.+?)(?:\n|$)",
     "base_url": r"\[Ver Detalles del Torrent\]\((https?://.+?)\)",
     "id": r"/torrents/(\d+?)\)",
     # ParabellumHD doesn't announce the `Double Upload`, `Freeleech`, `Featured`, and `Refundable` values
@@ -23,8 +23,8 @@ def _get(pattern: str, text: str) -> str | None:
 class PARABELLUMHD:
     @staticmethod
     def parse_event(event: events.NewMessage.Event) -> AnnounceData:
-        message: str = unicodedata.normalize('NFKC', event.message.message)
-        logger.debug("Raw message: {!r}", event.message.message)
+        message: str = unicodedata.normalize('NFKC', event.message.text)
+        logger.debug("Raw message: {!r}", event.message.text)
         logger.debug("Normalized message: {!r}", message)
         data = {key: _get(pat, message) for key, pat in _FIELDS.items()}
         logger.debug("Parsed fields: {}", data)

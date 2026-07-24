@@ -10,7 +10,7 @@ _FIELDS = {
     "category": r"Categor.a:\s#?(.+?)(?:\n|$)",
     "size": r"Tama.o:\s(.+?)(?:\n|$)",
     "uploader": r"Uploader:\s(.+?)(?:\n|$)",
-    "freeleech": r"Free:\s(\d+?)%",
+    "freeleech": r"Free:\s(\d+?)(?:\s|%)",
     "base_url": r"Link:\s(.+?)(?:\n|$)",
     "double_upload": r"(Double Upload)",
     "featured": r"(Destacado)",

@@ -28,6 +28,8 @@ class MILNUEVE:
         data = {key: _get(pat, message) for key, pat in _FIELDS.items()}
         logger.debug("Parsed fields: {}", data)
 
+        data["indexer"] = "MILNUEVE"
+
         obj = AnnounceData(**data)
         logger.debug("Parsed data: {}", vars(obj))
 

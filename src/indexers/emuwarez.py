@@ -36,6 +36,8 @@ class EMUWAREZ:
                         data["base_url"] = button.url
                         data["id"] = re.search(r"/torrents/(\d+)", button.url).group(1)
                         break
+
+        data["indexer"] = "EMUWAREZ"
         
         obj = AnnounceData(**data)
         logger.debug("Parsed data: {}", vars(obj))

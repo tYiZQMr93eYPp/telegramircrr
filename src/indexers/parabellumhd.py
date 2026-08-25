@@ -29,6 +29,8 @@ class PARABELLUMHD:
         data = {key: _get(pat, message) for key, pat in _FIELDS.items()}
         logger.debug("Parsed fields: {}", data)
 
+        data["indexer"] = "PARABELLUMHD"
+
         obj = AnnounceData(**data)
         logger.debug("Parsed data: {}", vars(obj))
 

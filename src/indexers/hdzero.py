@@ -39,6 +39,8 @@ class HDZERO:
                 data["base_url"] = base_url
                 data["id"] = re.search(r"/torrents/(\d+)", base_url).group(1)
 
+        data["indexer"] = "HDZERO"
+
         obj = AnnounceData(**data)
         logger.debug("Parsed data: {}", vars(obj))
 

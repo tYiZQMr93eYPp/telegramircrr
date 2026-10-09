@@ -9,8 +9,8 @@ _FIELDS = {
     "title": r"🎬\s\*\*(.+?)(?:\*\*\n)",
     "category": r"Categor.a:\*\*\s#?(.+?)(?:\n|$)",
     "size": r"Tama.o:\*\*\s(.+?)(?:\n|$)",
-    "uploader": r"Subido por:\*\*\s#?(.+?)(?:\n|$)",
-    "base_url": r"\[Ver Detalles del Torrent\]\((https?://.+?)\)",
+    "uploader": r"Subido\spor:\*\*\s#?(.+?)(?:\n|$)",
+    "base_url": r"\[Ver\sDetalles\sdel\sTorrent\]\((https?://.+?)\)",
     "id": r"/torrents/(\d+?)\)",
     # ParabellumHD doesn't announce the `Double Upload`, `Freeleech`, `Featured`, and `Refundable` values
 }

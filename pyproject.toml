@@ -1,6 +1,6 @@
 [project]
 name = "telegramircrr"
-version = "0.3.27-alpha"
+version = "0.3.28"
 description = "Parses Telegram announcements and announces to IRC channels"
 readme = "README.md"
 requires-python = ">=3.14"

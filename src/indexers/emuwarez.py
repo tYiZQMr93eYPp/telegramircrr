@@ -9,7 +9,7 @@ _FIELDS = {
     "title": r"🎬\s(.+?)(?:\n|$)",
     "category": r"Categor.a:\s#?(.+?)(?:\n|$)",
     "size": r"Tama.o:\s(.+?)(?:\n|$)",
-    "uploader": r"Subido por:\s#?(.+?)(?:\n|$)",
+    "uploader": r"Subido\spor:\s#?(.+?)(?:\n|$)",
     "freeleech": r"🎁\s(\d+?)\s?%\sFree",
     "featured": r"(DESTACADO)",
     # EMUWAREZ doesn't announce the `Double Upload`, and `Refundable` values

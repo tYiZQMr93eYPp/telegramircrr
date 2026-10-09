@@ -9,7 +9,7 @@ _FIELDS = {
     "title": r"📌\s(.+?)(?:\n|$)",
     "category": r"📂\s#?(.+?)\s?•",
     "size": r"💾\s(.+?)(?:\n|$)",
-    "base_url": r"\[Ver torrent\]\((https?://.+?)\)",
+    "base_url": r"\[Ver\storrent\]\((https?://.+?)\)",
     "id": r"/torrents/(\d+?)\)",
     # Milnueve doesn't announce the `Uploader`, `Double Upload`, `Freeleech`, `Featured`, and `Refundable` values
 }

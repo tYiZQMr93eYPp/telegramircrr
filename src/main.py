@@ -1,3 +1,4 @@
+import asyncio
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -58,7 +59,13 @@ async def read_messages(event: events.NewMessage.Event):
         return
 
     logger.debug("Indexer matched: {}", indexer)
-    data: AnnounceData = indexer().parse_event(event)
+    api = indexer_mapper.api(indexer)
+    parse_event = indexer().parse_event
+    # parse_event does HTTP call blocking, so it runs off the event loop
+    if api:
+        data: AnnounceData = await asyncio.to_thread(parse_event, event, api=api)
+    else:
+        data = await asyncio.to_thread(parse_event, event)
     data.send_data_to_irc(indexer, irc_bot)
 
 

@@ -9,3 +9,10 @@ group_topic_indexers:
 chat_indexers:
   # TG-CHAT-ID_MYINDEXER: MyIndexer
   # "1234567890": MyIndexer
+
+# Optional. Used to look up a torrent's id when the announce doesn't include it (if the indexer supports it)
+indexer_api:
+  # MyIndexer:
+  #   url: https://tracker.example.org  # scheme + fqdn, no path
+  #   api_key: MY_API_KEY
+  #   rate_limit: 15  # optional, max lookups per minute

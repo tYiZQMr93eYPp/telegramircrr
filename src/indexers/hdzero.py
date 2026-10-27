@@ -2,6 +2,7 @@ import re, requests
 import unicodedata
 from loguru import logger
 from models.announce_data import AnnounceData
+from models.indexer_api import IndexerApi
 from telethon import events
 
 
@@ -24,7 +25,7 @@ def _get(pattern: str, text: str) -> str | None:
 
 class HDZERO:
     @staticmethod
-    def parse_event(event: events.NewMessage.Event) -> AnnounceData:
+    def parse_event(event: events.NewMessage.Event, api: IndexerApi | None = None) -> AnnounceData:
         message: str = unicodedata.normalize('NFKC', event.message.message)
         logger.debug("Raw message: {!r}", event.message.message)
         logger.debug("Normalized message: {!r}", message)
@@ -38,6 +39,13 @@ class HDZERO:
             if base_url:
                 data["base_url"] = base_url
                 data["id"] = re.search(r"/torrents/(\d+)", base_url).group(1)
+
+        if not data.get("id") and data["title"] and api:
+            found = api.find_torrent(data["title"], data["uploader"])
+            logger.debug("Torrent resolved through the API: {}", found)
+            if found:
+                data["id"], details_link = found
+                data["base_url"] = data["base_url"] or details_link
 
         data["indexer"] = "HDZERO"
 

@@ -9,7 +9,7 @@ from irc_bot.ircbot import IRCBot
 from log_config import LogConfig
 from mappers.indexer_mapper import IndexerMapper
 from models.announce_data import AnnounceData
-from notifications.apprise_notifier import extract_buttons, notify_missing_fields
+from notifications.apprise_notifier import notify_missing_fields
 
 
 load_dotenv()
@@ -60,6 +60,8 @@ async def read_messages(event: events.NewMessage.Event):
         return
 
     logger.debug("Indexer matched: {}", indexer)
+    logger.debug("reply_markup | indexer={} | msg_id={} | {}", indexer.__name__, message_ent.id,
+                message_ent.reply_markup.to_dict() if message_ent.reply_markup else None)
     api = indexer_mapper.api(indexer)
     parse_event = indexer().parse_event
     # parse_event does HTTP call blocking, so it runs off the event loop
@@ -71,7 +73,7 @@ async def read_messages(event: events.NewMessage.Event):
     missing = data.missing_fields()
     if missing:
         logger.error("Missing fields {} | indexer={} | msg_id={}", missing, indexer.__name__, message_ent.id)
-        await asyncio.to_thread(notify_missing_fields, indexer.__name__, data, missing, event, extract_buttons(event))
+        await asyncio.to_thread(notify_missing_fields, indexer.__name__, data, missing, event)
 
     data.send_data_to_irc(indexer, irc_bot)
 

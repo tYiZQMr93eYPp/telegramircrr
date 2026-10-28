@@ -34,22 +34,6 @@ _TZ = _resolve_tz()
 _APPRISE_URL = _resolve_url()
 
 
-def extract_buttons(event: events.NewMessage.Event) -> list[list[dict]]:
-    rows = getattr(getattr(event.message, "reply_markup", None), "rows", None) or []
-    result = []
-    for row in rows:
-        buttons = []
-        for button in getattr(row, "buttons", None) or []:
-            item = {"text": getattr(button, "text", None)}
-            if url := getattr(button, "url", None):
-                item["url"] = url
-            if data := getattr(button, "data", None):
-                item["data"] = data.decode("utf-8", "replace") if isinstance(data, bytes) else str(data)
-            buttons.append(item)
-        result.append(buttons)
-    return result
-
-
 def _format_time(value: datetime | None) -> str | None:
     return value.astimezone(_TZ).isoformat(timespec="seconds") if value else None
 
@@ -60,7 +44,7 @@ def _fence(content: str, lang: str = "") -> str:
 
 
 def notify_missing_fields(indexer_name: str, data: AnnounceData, missing: list[str],
-                            event: events.NewMessage.Event, buttons: list[list[dict]]) -> None:
+                          event: events.NewMessage.Event) -> None:
     if not _APPRISE_URL:
         return
 
@@ -74,9 +58,9 @@ def notify_missing_fields(indexer_name: str, data: AnnounceData, missing: list[s
             "**AnnounceData**\n" + _fence(json.dumps(fields, ensure_ascii=False, indent=2, default=str), "json"),
             "**Normalized message**\n" + _fence(data.normalized_message or ""),
         ]
-        if buttons:
-            rows = "\n".join(json.dumps(row, ensure_ascii=False, default=str) for row in buttons)
-            sections.append("**Buttons** (one row per line)\n" + _fence(rows, "json"))
+        markup = getattr(event.message, "reply_markup", None)
+        if markup is not None and hasattr(markup, "to_dict"):
+            sections.append("**Reply markup**\n" + _fence(json.dumps(markup.to_dict(), ensure_ascii=False, indent=2, default=str), "json"))
 
         notifier = apprise.Apprise()
         if not notifier.add(_APPRISE_URL):

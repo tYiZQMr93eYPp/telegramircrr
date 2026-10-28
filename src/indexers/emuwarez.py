@@ -2,6 +2,7 @@ import re
 import unicodedata
 from loguru import logger
 from models.announce_data import AnnounceData
+from utils.telegram_utils import button_urls
 from telethon import events
 
 
@@ -29,13 +30,11 @@ class EMUWAREZ:
         data = {key: _get(pat, message) for key, pat in _FIELDS.items()}
         logger.debug("Parsed fields: {}", data)
 
-        if event.message.reply_markup:
-            for row in event.message.reply_markup.rows:
-                for button in row.buttons:
-                    if getattr(button, "url", None) and "torrents" in button.url and "download" not in button.url:
-                        data["base_url"] = button.url
-                        data["id"] = re.search(r"/torrents/(\d+)", button.url).group(1)
-                        break
+        for url in button_urls(event.message):
+            if "torrents" in url and "download" not in url:
+                data["base_url"] = url
+                data["id"] = re.search(r"/torrents/(\d+)", url).group(1)
+                break
 
         data["indexer"] = "EMUWAREZ"
         

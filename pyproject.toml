@@ -1,10 +1,11 @@
 [project]
 name = "telegramircrr"
-version = "0.3.33-alpha"
+version = "0.3.34-alpha"
 description = "Parses Telegram announcements and announces to IRC channels"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "apprise==2.1.0",
     "cryptg==0.6.0",
     "irc==20.5.0",
     "loguru==0.7.3",
@@ -12,6 +13,7 @@ dependencies = [
     "pyyaml==6.0.3",
     "requests==2.34.2",
     "telethon==1.45.0",
+    "tzdata==2026.6",
 ]
 
 [build-system]

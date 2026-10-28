@@ -30,7 +30,7 @@ class MILNUEVE:
 
         data["indexer"] = "MILNUEVE"
 
-        obj = AnnounceData(**data)
+        obj = AnnounceData(**data, normalized_message=message)
         logger.debug("Parsed data: {}", vars(obj))
 
         return obj

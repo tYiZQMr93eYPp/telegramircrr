@@ -15,6 +15,7 @@ services:
       LOG_PATH: #optional
       ANNOUNCE_OVERWRITE_FQDN: #optional
       APPEND_INDEXER_NAME_TO_ANNOUNCE_TITLE: #optional
+      APPRISE_URL: #optional
     volumes:
       - /path/to/tg_announcer_config:/app/irc
       - /path/to/log_path:/app/logs/app.log # optional

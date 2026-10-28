@@ -31,6 +31,7 @@ Watches configured Telegram channels for new indexer announcements, parses the m
 | `LOG_PATH` | The log file path | false | `None` | `/app/logs/telegramircrr.log` |
 | `ANNOUNCE_OVERWRITE_FQDN` | Overwrite the [`InfoURL`](https://github.com/autobrr/autobrr/blob/04ba5ccb4bc45f7fdb3f98b343c0b74b2303fb2f/internal/domain/release.go#L50)'s FQDN | false | `None` | `tracker.example.org` |
 | `APPEND_INDEXER_NAME_TO_ANNOUNCE_TITLE` | Appends the indexer's name to the announce's title | false | `false` | `true` |
+| `APPRISE_URL` | [Apprise API](https://github.com/caronc/apprise-api) URL (including the config id) used to notify when an announce lacks `title`, `category`, `size`, `id` or `base_url`. Notification timestamps use `TZ` (UTC if unset) | false | `None` | `apprise://apprise:8000/your-config-id` |
 
 ### Indexer config (`config.yaml`)
 
@@ -96,6 +97,7 @@ services:
       LOG_PATH: #optional
       ANNOUNCE_OVERWRITE_FQDN: #optional
       APPEND_INDEXER_NAME_TO_ANNOUNCE_TITLE: #optional
+      APPRISE_URL: #optional
     volumes:
       - /path/to/tg_announcer_config:/app/irc
       - /path/to/log_path:/app/logs/app.log # optional
@@ -118,6 +120,7 @@ docker run -d \
   -e LOG_PATH= `#optional` \
   -e ANNOUNCE_OVERWRITE_FQDN= `#optional` \
   -e APPEND_INDEXER_NAME_TO_ANNOUNCE_TITLE= `#optional` \
+  -e APPRISE_URL= `#optional` \
   -v /path/to/tg_announcer_config:/app/irc \
   -v /path/to/log_path:/app/logs/app.log `#optional` \
   tYiZQMr93eYPp/telegramircrr:latest

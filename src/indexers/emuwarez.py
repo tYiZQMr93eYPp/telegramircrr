@@ -32,9 +32,10 @@ class EMUWAREZ:
         if event.message.reply_markup:
             for row in event.message.reply_markup.rows:
                 for button in row.buttons:
-                    if getattr(button, "url", None) and "torrents" in button.url and "download" not in button.url:
-                        data["base_url"] = button.url
-                        data["id"] = re.search(r"/torrents/(\d+)", button.url).group(1)
+                    url = getattr(getattr(button, "type", None), "url", None)
+                    if url and "torrents" in url and "download" not in url:
+                        data["base_url"] = url
+                        data["id"] = re.search(r"/torrents/(\d+)", url).group(1)
                         break
 
         data["indexer"] = "EMUWAREZ"

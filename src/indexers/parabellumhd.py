@@ -6,7 +6,7 @@ from telethon import events
 
 
 _FIELDS = {
-    "title": r"🎬\s\*\*(.+?)(?:\*\*\n)",
+    "title": r"🎬\s\*\*(.+?)\s?(?:\*\*)",
     "category": r"Categor.a:\*\*\s#?(.+?)(?:\n|$)",
     "size": r"Tama.o:\*\*\s(.+?)(?:\n|$)",
     "uploader": r"Subido\spor:\*\*\s#?(.+?)(?:\n|$)",

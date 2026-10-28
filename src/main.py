@@ -9,6 +9,7 @@ from irc_bot.ircbot import IRCBot
 from log_config import LogConfig
 from mappers.indexer_mapper import IndexerMapper
 from models.announce_data import AnnounceData
+from notifications.apprise_notifier import extract_buttons, notify_missing_fields
 
 
 load_dotenv()
@@ -66,6 +67,12 @@ async def read_messages(event: events.NewMessage.Event):
         data: AnnounceData = await asyncio.to_thread(parse_event, event, api=api)
     else:
         data = await asyncio.to_thread(parse_event, event)
+
+    missing = data.missing_fields()
+    if missing:
+        logger.error("Missing fields {} | indexer={} | msg_id={}", missing, indexer.__name__, message_ent.id)
+        await asyncio.to_thread(notify_missing_fields, indexer.__name__, data, missing, event, extract_buttons(event))
+
     data.send_data_to_irc(indexer, irc_bot)
 
 

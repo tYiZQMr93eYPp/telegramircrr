@@ -6,6 +6,7 @@ from irc_bot.utils import irc_channel_for_indexer
 _ANNOUNCE_OVERWRITE_FQDN = os.getenv("ANNOUNCE_OVERWRITE_FQDN")
 _APPEND_INDEXER_NAME_TO_ANNOUNCE_TITLE = os.getenv("APPEND_INDEXER_NAME_TO_ANNOUNCE_TITLE", "false").strip().lower() == "true"
 _PROTOCOL_FQDN_RE = re.compile(r"^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^/]+")
+_REQUIRED_FIELDS = ("title", "category", "size", "id", "base_url")
 
 
 class AnnounceData:
@@ -19,8 +20,10 @@ class AnnounceData:
                  double_upload: str | None = None,
                  featured: str | None = None,
                  refundable: str | None = None,
-                 indexer: str | None = None):
-        self.title = "{} (Indexer: {})".format(title, indexer) if _APPEND_INDEXER_NAME_TO_ANNOUNCE_TITLE else title
+                 indexer: str | None = None,
+                 normalized_message: str | None = None):
+        self.title = "{} (Indexer: {})".format(title, indexer) if title and _APPEND_INDEXER_NAME_TO_ANNOUNCE_TITLE else title
+        self.normalized_message = normalized_message
         self.category = category
         self.size = size
         self.uploader = uploader
@@ -45,6 +48,8 @@ class AnnounceData:
             else base_url
         )
 
+    def missing_fields(self) -> list[str]:
+        return [name for name in _REQUIRED_FIELDS if not getattr(self, name)]
 
     def send_data_to_irc(self, indexer, irc):
         fields = {

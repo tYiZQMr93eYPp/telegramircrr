@@ -5,6 +5,8 @@ from dataclasses import dataclass, field
 
 import requests
 from loguru import logger
+from pydantic import ValidationError
+from models.torrent import Torrent
 
 DEFAULT_RATE_LIMIT = 15  # lookups per minute
 _RATE_WINDOW = 60.0  # seconds
@@ -34,8 +36,8 @@ class IndexerApi:
             logger.info("Rate limit reached for {}, delaying the lookup by {:.0f}s", self.url, delay)
             time.sleep(delay)
 
-    def find_torrent(self, title: str, uploader: str | None = None) -> tuple[str, str | None] | None:
-        """Returns `(id, details_link)` of the torrent named `title`, or None if it can't be determined."""
+    def find_torrent(self, title: str, uploader: str | None = None) -> Torrent | None:
+        """Returns the matching torrent named `title`, or None if it can't be determined."""
         self._wait_for_slot()
         try:
             response = requests.get(
@@ -47,6 +49,7 @@ class IndexerApi:
             response.raise_for_status()
             body = response.json()
         except (requests.RequestException, ValueError) as e:
+            # TODO: Implement retry mechanism for errors (max. up to 3 times)
             logger.warning("Torrent lookup failed for {!r}: {}", title, e)
             return None
 
@@ -63,7 +66,8 @@ class IndexerApi:
                 match,
             )
 
-        torrent_id = match.get("id")
-        if torrent_id is None:
+        try:
+            return Torrent.model_validate(match)
+        except ValidationError as e:
+            logger.warning("Torrent lookup for {!r} returned an invalid match: {}", title, e)
             return None
-        return str(torrent_id), (match.get("attributes") or {}).get("details_link")

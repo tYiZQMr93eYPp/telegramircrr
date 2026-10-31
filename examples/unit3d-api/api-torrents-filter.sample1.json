@@ -1,0 +1,46 @@
+{
+    "data": [
+        {
+            "type": "torrent",
+            "id": "1",
+            "attributes": {
+                "meta": {
+                    "poster": "",
+                    "genres": ""
+                },
+                "name": "The Sopranos (1999) - S01 - Pilot [WEBDL-1080p][AC3 5.1][x264]",
+                "release_year": null,
+                "category": "TV",
+                "type": "WEB-DL",
+                "resolution": "1080p",
+                "description": "test",
+                "size": 40796180680,
+                "folder": "Season 01",
+                "freeleech": "25%",
+                "double_upload": true,
+                "refundable": false,
+                "internal": false,
+                "featured": false,
+                "personal_release": false,
+                "uploader": "Anonymous",
+                "seeders": 0,
+                "leechers": 0,
+                "times_completed": 0,
+                "tmdb_id": 1398,
+                "imdb_id": 141842,
+                "tvdb_id": 75299,
+                "mal_id": null,
+                "igdb_id": null,
+                "isbn13": null,
+                "asin": null,
+                "category_id": 2,
+                "type_id": 4,
+                "resolution_id": 3,
+                "created_at": "2026-10-27T02:17:32.000000Z",
+                "details_link": "http:\/\/tracker.internal:8008\/torrents\/1",
+                "download_link": "http:\/\/tracker.internal:8008\/torrent\/download\/1.1337",
+                "magnet_link": null
+            }
+        }
+    ]
+}

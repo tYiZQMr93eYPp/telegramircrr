@@ -32,20 +32,28 @@ class HDZERO:
         data = {key: _get(pat, message) for key, pat in _FIELDS.items()}
         logger.debug("Parsed fields: {}", data)
 
-        if data["base_url"]:
-            response = requests.head(data["base_url"], allow_redirects=True, timeout=60)
-            urls = [r.headers["Location"] for r in response.history if "Location" in r.headers] + [response.url]
-            base_url = next((u for u in urls if re.match(r".+?/torrents/\d+", u)), None)
-            if base_url:
-                data["base_url"] = base_url
-                data["id"] = re.search(r"/torrents/(\d+)", base_url).group(1)
+        # TODO: In the future, if the `base_url` is not missing, use it to pull data from
+        # the UNIT3D API directly with its `id` to enrich the data.
+        # For now, it gets commented out to rely on the `/api/torrents/filter` endpoint alone.
+        # if data["base_url"]:
+        #     response = requests.head(data["base_url"], allow_redirects=True, timeout=60)
+        #     urls = [r.headers["Location"] for r in response.history if "Location" in r.headers] + [response.url]
+        #     base_url = next((u for u in urls if re.match(r".+?/torrents/\d+", u)), None)
+        #     if base_url:
+        #         data["base_url"] = base_url
+        #         data["id"] = re.search(r"/torrents/(\d+)", base_url).group(1)
 
+        # TODO: In the future, we may encapsulate this functionality to be able to reuse it.
+        # For now, it's only necessary for HDZERO.
         if not data.get("id") and data["title"] and api:
             found = api.find_torrent(data["title"], data["uploader"])
             logger.debug("Torrent resolved through the API: {}", found)
             if found:
-                data["id"], details_link = found
-                data["base_url"] = data["base_url"] or details_link
+                data["id"] = found.id
+                data["base_url"] = found.attributes.details_link
+                data["tmdb_id"] = found.attributes.tmdb_id
+                data["imdb_id"] = found.attributes.imdb_id
+                data["tvdb_id"] = found.attributes.tvdb_id
 
         data["indexer"] = "HDZERO"
 

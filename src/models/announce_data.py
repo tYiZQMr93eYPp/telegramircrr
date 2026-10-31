@@ -21,7 +21,10 @@ class AnnounceData:
                  featured: str | None = None,
                  refundable: str | None = None,
                  indexer: str | None = None,
-                 normalized_message: str | None = None):
+                 normalized_message: str | None = None,
+                 tmdb_id: int | None = None,
+                 imdb_id: int | None = None,
+                 tvdb_id: int | None = None):
         self.title = "{} (Indexer: {})".format(title, indexer) if title and _APPEND_INDEXER_NAME_TO_ANNOUNCE_TITLE else title
         self.normalized_message = normalized_message
         self.category = category
@@ -29,12 +32,14 @@ class AnnounceData:
         self.uploader = uploader
         self.freeleech = int(freeleech) if freeleech is not None else 0
         self.id = id
+        self.tmdb_id = str(tmdb_id) if tmdb_id else ""
+        self.imdb_id = str(imdb_id) if imdb_id else ""
+        self.tvdb_id = str(tvdb_id) if tvdb_id else ""
         self.tags = ",".join(t for t, v in [
             ("double_upload", double_upload),
             ("featured", featured),
             ("refundable", refundable),
         ] if v)
-
         # Q: Why do we allow overwriting the FQDN?
         #    A: When integrating `autobrr` with `Sonarr` or `Radarr` (and, perhaps, other automation tools), they may invoke the
         #       `[InfoURL](https://github.com/autobrr/autobrr/blob/04ba5ccb4bc45f7fdb3f98b343c0b74b2303fb2f/internal/domain/release.go#L50)`
@@ -60,7 +65,10 @@ class AnnounceData:
             "Freeleech": self.freeleech,
             "URL": self.base_url,
             "Id": self.id,
+            "TMDBID": self.tmdb_id,
+            "IMDBID": self.imdb_id,
+            "TVDBID": self.tvdb_id,
             "Tags": self.tags,
         }
-        message = " | ".join(f"{k}: {v}" for k, v in fields.items())
+        message = " | ".join(f"{k}: [{v}]" for k, v in fields.items())
         irc.send_message(irc_channel_for_indexer(indexer), message)

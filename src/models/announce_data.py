@@ -14,12 +14,15 @@ class AnnounceData:
                  category: str | None = None,
                  size: str | None = None,
                  uploader: str | None = None,
+                 resolution: str | None = None,
                  freeleech: str | None = None,
                  base_url: str | None = None,
                  id: str | None = None,
-                 double_upload: str | None = None,
-                 featured: str | None = None,
-                 refundable: str | None = None,
+                 double_upload: bool = False,
+                 featured: bool = False,
+                 refundable: bool = False,
+                 internal: bool = False,
+                 personal_release: bool = False,
                  indexer: str | None = None,
                  normalized_message: str | None = None,
                  tmdb_id: int | None = None,
@@ -30,6 +33,7 @@ class AnnounceData:
         self.category = category
         self.size = size
         self.uploader = uploader
+        self.resolution = resolution
         self.freeleech = int(freeleech) if freeleech is not None else 0
         self.id = id
         self.tmdb_id = str(tmdb_id) if tmdb_id else ""
@@ -39,6 +43,8 @@ class AnnounceData:
             ("double_upload", double_upload),
             ("featured", featured),
             ("refundable", refundable),
+            ("internal", internal),
+            ("personal_release", personal_release),
         ] if v)
         # Q: Why do we allow overwriting the FQDN?
         #    A: When integrating `autobrr` with `Sonarr` or `Radarr` (and, perhaps, other automation tools), they may invoke the
@@ -62,6 +68,7 @@ class AnnounceData:
             "Category": self.category,
             "Size": self.size,
             "Uploader": self.uploader,
+            "Resolution": self.resolution,
             "Freeleech": self.freeleech,
             "URL": self.base_url,
             "Id": self.id,

@@ -55,31 +55,33 @@ irc:
         type: single
         lines:
           - tests:
-              - line: "Title: [Release Name S01 1080p AMZN WEB-DL DDP5.1 H.264-NOGROUP] | Category: [Series] | Size: [13.37 GiB] | Uploader: [AnonymousUploader] | Freeleech: [0] | URL: [https://http-https-echo.n39478gv5y.duckdns.org:8443/torrents/18741] | Id: [18741] | TMDBID: [1337] | IMDBID: [11337] | TVDBID: [111337] | Tags: []"
+              - line: "Title: [Release Name S01 1080p AMZN WEB-DL DDP5.1 H.264-NOGROUP] | Category: [Series] | Size: [13.37 GiB] | Uploader: [AnonymousUploader] | Resolution: [1080p] | Freeleech: [0] | URL: [https://tracker.example.org/torrents/18741] | Id: [18741] | TMDBID: [1337] | IMDBID: [11337] | TVDBID: [111337] | Tags: []"
                 expect:
                   releaseName: Release Name S01 1080p AMZN WEB-DL DDP5.1 H.264-NOGROUP
                   category: Series
                   torrentSize: 13.37 GiB
                   uploader: AnonymousUploader
+                  resolution: 1080p
                   freeleechPercent: "0"
                   torrentId: "18741"
                   tmdb: 1337
                   imdb: 11337
                   tvdb: 111337
                   tags: ""
-              - line: "Title: [Release Name S01 1080p AMZN WEB-DL DDP5.1 H.264-NOGROUP] | Category: [Series] | Size: [13.37 GiB] | Uploader: [AnonymousUploader] | Freeleech: [0] | URL: [https://http-https-echo.n39478gv5y.duckdns.org:8443/torrents/18741] | Id: [18741] | TMDBID: [1337] | IMDBID: [11337] | TVDBID: [111337] | Tags: [double_upload,featured]"
+              - line: "Title: [Release Name S01 1080p AMZN WEB-DL DDP5.1 H.264-NOGROUP] | Category: [Series] | Size: [13.37 GiB] | Uploader: [AnonymousUploader] | Resolution: [1080p] | Freeleech: [0] | URL: [https://tracker.example.org/torrents/18741] | Id: [18741] | TMDBID: [1337] | IMDBID: [11337] | TVDBID: [111337] | Tags: [double_upload,featured]"
                 expect:
                   releaseName: Release Name S01 1080p AMZN WEB-DL DDP5.1 H.264-NOGROUP
                   category: Series
                   torrentSize: 13.37 GiB
                   uploader: AnonymousUploader
+                  resolution: 1080p
                   freeleechPercent: "0"
                   torrentId: "18741"
                   tmdb: 1337
                   imdb: 11337
                   tvdb: 111337
                   tags: "double_upload,featured"
-            pattern: 'Title: \[(?P<releaseName>.+?)\] \| Category: \[(?P<category>.+?)\] \| Size: \[(?P<torrentSize>.+?)\] \| Uploader: \[(?P<uploader>.+?)\] \| Freeleech: \[(?P<freeleechPercent>\d+)\] \| URL: \[\S+\] \| Id: \[(?P<torrentId>\d+)\] \| TMDBID: \[(?P<tmdb>\d*)\] \| IMDBID: \[(?P<imdb>\d*)\] \| TVDBID: \[(?P<tvdb>\d*)\] \| Tags: \[(?P<tags>.*)\]'
+            pattern: 'Title: \[(?P<releaseName>.+?)\] \| Category: \[(?P<category>.+?)\] \| Size: \[(?P<torrentSize>.+?)\] \| Uploader: \[(?P<uploader>.+?)\] \| Resolution: \[(?P<resolution>.*?)\] \| Freeleech: \[(?P<freeleechPercent>\d+)\] \| URL: \[\S+\] \| Id: \[(?P<torrentId>\d+)\] \| TMDBID: \[(?P<tmdb>\d*)\] \| IMDBID: \[(?P<imdb>\d*)\] \| TVDBID: \[(?P<tvdb>\d*)\] \| Tags: \[(?P<tags>.*)\]'
 
         match:
           infourl: "/torrents/{{ .torrentId }}"

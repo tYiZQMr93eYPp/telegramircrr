@@ -569,7 +569,7 @@ wheels = [
 
 [[package]]
 name = "telegramircrr"
-version = "0.3.37a0"
+version = "0.3.38a0"
 source = { editable = "." }
 dependencies = [
     { name = "apprise" },

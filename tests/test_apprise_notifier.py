@@ -53,23 +53,16 @@ def test_disabled_without_url(monkeypatch, data, make_event):
     assert FakeApprise.instances == []
 
 
-def test_body_contents(data, make_event, make_markup):
-    notify(data, make_event(make_markup("https://x/torrents/1")))
+def test_body_contents(data, make_event):
+    notify(data, make_event())
 
     [sent] = FakeApprise.instances[0].sent
     body = sent["body"]
     assert sent["title"].startswith("[TelegramIRCrr] Missing fields: NOBS")
     assert "`title`" in body
     assert "hello world" in body
-    assert "InlineButtonTypeUrl" in body
     assert "normalized_message" not in body
     assert "2026-10-28T13:00:00+01:00" in body  # message date (12:00 UTC) in TZ
-
-
-def test_markup_section_skipped_without_markup(data, make_event):
-    notify(data, make_event(None))
-
-    assert "Reply markup" not in FakeApprise.instances[0].sent[0]["body"]
 
 
 @pytest.mark.parametrize("result", [False, RuntimeError("boom")])

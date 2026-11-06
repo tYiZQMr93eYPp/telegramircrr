@@ -52,21 +52,7 @@ chat_indexers:
 
 ```
 
-The IRC channel is derived automatically from the class name: `MyIndexer` → `#myindexer_announce`.
-
-#### Optional: `indexer_api`
-
-When an announce doesn't include the torrent's link/id, an indexer can look it up through its `/api/torrents/filter` endpoint (by title, then by uploader if there are several matches). This requires the indexer's class to support it, and an entry keyed by its class name:
-
-```yaml
-indexer_api:
-  MyIndexer:
-    url: https://tracker.example.org  # scheme + host, no path
-    api_key: MY_API_KEY
-    rate_limit: 15  # optional, max lookups per minute (default: 15)
-```
-
-If the entry is missing, the lookup is skipped. Lookups beyond `rate_limit` are delayed, not dropped.
+The IRC channel is derived automatically from the class name: `MyIndexer` → `#myindexer_announce`. Every indexer parses the same announce template, so any name can be used without adding code.
 
 ## Running with Docker
 
@@ -148,8 +134,8 @@ docker run -d \
 ```
 src/
   main.py              # Entry point
-  indexers/            # One file per indexer, filename = class name lowercase
-    myindexer.py
+  indexers/
+    base.py            # Shared announce template (`FIELDS`) and parser
   models/
     announce_data.py    # Parsed announce data + IRC send logic
   irc_bot/

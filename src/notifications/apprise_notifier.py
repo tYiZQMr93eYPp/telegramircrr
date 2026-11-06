@@ -58,9 +58,6 @@ def notify_missing_fields(indexer_name: str, data: AnnounceData, missing: list[s
             "**AnnounceData**\n" + _fence(json.dumps(fields, ensure_ascii=False, indent=2, default=str), "json"),
             "**Normalized message**\n" + _fence(data.normalized_message or ""),
         ]
-        markup = getattr(event.message, "reply_markup", None)
-        if markup is not None and hasattr(markup, "to_dict"):
-            sections.append("**Reply markup**\n" + _fence(json.dumps(markup.to_dict(), ensure_ascii=False, indent=2, default=str), "json"))
 
         notifier = apprise.Apprise()
         if not notifier.add(_APPRISE_URL):

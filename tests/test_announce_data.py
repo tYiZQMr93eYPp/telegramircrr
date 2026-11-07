@@ -22,6 +22,11 @@ def test_optional_fields_are_not_required():
     assert data.missing_fields() == []
 
 
+def test_uploader_is_stripped():
+    assert AnnounceData(**COMPLETE, uploader="  SomeUploader \n").uploader == "SomeUploader"
+    assert AnnounceData(**COMPLETE, uploader=None).uploader is None
+
+
 def test_missing_title_is_still_detected_when_appending_indexer(monkeypatch):
     monkeypatch.setattr(announce_data, "_APPEND_INDEXER_NAME_TO_ANNOUNCE_TITLE", True)
 

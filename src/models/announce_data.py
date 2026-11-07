@@ -32,8 +32,8 @@ class AnnounceData:
         self.normalized_message = normalized_message
         self.category = category
         self.size = size
-        self.uploader = uploader
-        self.resolution = resolution
+        self.uploader = uploader.strip() if uploader else uploader
+        self.resolution = resolution or ""
         self.freeleech = int(freeleech) if freeleech is not None else 0
         self.id = id
         self.tmdb_id = str(tmdb_id) if tmdb_id else ""

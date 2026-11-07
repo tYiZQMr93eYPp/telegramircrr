@@ -1,6 +1,7 @@
 import re
 import unicodedata
 from functools import cache
+from importlib import import_module
 from loguru import logger
 from models.announce_data import AnnounceData
 from telethon import events
@@ -52,5 +53,15 @@ class BaseIndexer:
 
 @cache
 def indexer_class(name: str) -> type[BaseIndexer]:
+    # A custom `indexers/<name>.py` defining class `<name>` wins over the standard template.
+    if name.isidentifier():
+        module = f"indexers.{name.lower()}"
+        try:
+            return getattr(import_module(module), name)
+        except ModuleNotFoundError as e:
+            if e.name != module:
+                raise
+        except AttributeError:
+            pass
     # Cached so the same name always yields the same class (they're compared and stored in sets).
     return type(name, (BaseIndexer,), {})

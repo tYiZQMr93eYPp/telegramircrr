@@ -52,7 +52,7 @@ chat_indexers:
 
 ```
 
-The IRC channel is derived automatically from the class name: `MyIndexer` → `#myindexer_announce`. Every indexer parses the same announce template, so any name can be used without adding code.
+The IRC channel is derived automatically from the class name: `MyIndexer` → `#myindexer_announce`. Every indexer parses the same announce template, so any name can be used without adding code. An indexer with its own message format can instead define `class <NAME>(BaseIndexer)` in `src/indexers/<name>.py` (see `torrentland.py`); it takes priority over the standard template.
 
 ## Running with Docker
 
@@ -136,6 +136,7 @@ src/
   main.py              # Entry point
   indexers/
     base.py            # Shared announce template (`FIELDS`) and parser
+    torrentland.py     # Example of a custom parser
   models/
     announce_data.py    # Parsed announce data + IRC send logic
   irc_bot/

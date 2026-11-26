@@ -6,6 +6,8 @@ from loguru import logger
 from irc_bot.utils import irc_channel_for_indexer
 from telethon import TelegramClient, events, custom
 from irc_bot.ircbot import IRCBot
+from matrix_bot.matrixbot import MatrixBot
+from matrix_bot.utils import matrix_alias_for_indexer
 from log_config import LogConfig
 from mappers.indexer_mapper import IndexerMapper
 from models.announce_data import AnnounceData
@@ -26,6 +28,15 @@ irc_bot = IRCBot(
     os.getenv("IRC_NICKNAME", "irc_bot"),
     [irc_channel_for_indexer(indexer) for indexer in indexer_mapper.indexers()]
 )
+
+matrix_domain = os.getenv("MATRIX_ROOM_DOMAIN", "matrix.org")
+matrix_bot: MatrixBot | None = None
+if os.getenv("MATRIX_USER_ID") and os.getenv("MATRIX_ACCESS_TOKEN"):
+    matrix_bot = MatrixBot(
+        os.getenv("MATRIX_HOMESERVER", "https://matrix.org"),
+        os.getenv("MATRIX_USER_ID"),
+        os.getenv("MATRIX_ACCESS_TOKEN"),
+    )
 
 
 @client.on(events.NewMessage)
@@ -69,7 +80,27 @@ async def read_messages(event: events.NewMessage.Event):
 
     data.send_data_to_irc(indexer, irc_bot)
 
+    if matrix_bot is not None:
+        try:
+            await data.send_data_to_matrix(indexer, matrix_bot, matrix_domain)
+        except Exception:
+            logger.exception("Failed to announce to Matrix | indexer={} | msg_id={}", indexer.__name__, message_ent.id)
+
+
+async def start_matrix():
+    aliases = [matrix_alias_for_indexer(indexer, matrix_domain) for indexer in indexer_mapper.indexers()]
+    try:
+        await matrix_bot.join_rooms(aliases)
+    except Exception:
+        logger.exception("Failed to join Matrix rooms")
+
 
 if __name__ == "__main__":
     client.start()
-    client.run_until_disconnected()
+    if matrix_bot is not None:
+        client.loop.run_until_complete(start_matrix())
+    try:
+        client.run_until_disconnected()
+    finally:
+        if matrix_bot is not None:
+            client.loop.run_until_complete(matrix_bot.close())

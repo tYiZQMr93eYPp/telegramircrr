@@ -7,7 +7,7 @@ Watches configured Telegram channels for new indexer announcements, parses the m
 1. Listens for new messages on configured Telegram channels, group topics, and chats via Telethon
 2. Looks up which indexer class handles that channel
 3. Parses the message into structured `AnnounceData`
-4. Sends a formatted announcement to the indexer's IRC channel (e.g. `#myindexer_announce`)
+4. Sends a formatted announcement to the indexer's IRC channel (e.g. `#myindexer_announce`) and, if configured, its Matrix room
 
 ## Requirements
 
@@ -32,6 +32,10 @@ Watches configured Telegram channels for new indexer announcements, parses the m
 | `ANNOUNCE_OVERWRITE_FQDN` | Overwrite the [`InfoURL`](https://github.com/autobrr/autobrr/blob/04ba5ccb4bc45f7fdb3f98b343c0b74b2303fb2f/internal/domain/release.go#L50)'s FQDN | false | `None` | `tracker.example.org` |
 | `APPEND_INDEXER_NAME_TO_ANNOUNCE_TITLE` | Appends the indexer's name to the announce's title | false | `false` | `true` |
 | `APPRISE_URL` | [Apprise API](https://github.com/caronc/apprise-api) URL (including the config id) used to notify when an announce lacks `title`, `category`, `size`, `id` or `base_url`. Notification timestamps use `TZ` (UTC if unset) | false | `None` | `apprise://apprise:8000/your-config-id` |
+| `MATRIX_USER_ID` | Matrix bot user ID. Matrix announcing is enabled only when both this and `MATRIX_ACCESS_TOKEN` are set | false | `None` | `@mybot:matrix.org` |
+| `MATRIX_ACCESS_TOKEN` | Matrix bot access token | false | `None` | `mat_...` |
+| `MATRIX_HOMESERVER` | Matrix homeserver URL | false | `https://matrix.org` | `https://matrix.org` |
+| `MATRIX_ROOM_DOMAIN` | Server name used in the room aliases | false | `matrix.org` | `matrix.org` |
 
 ### Indexer config (`config.yaml`)
 
@@ -53,6 +57,10 @@ chat_indexers:
 ```
 
 The IRC channel is derived automatically from the class name: `MyIndexer` → `#myindexer_announce`. Every indexer parses the same announce template, so any name can be used without adding code. An indexer with its own message format can instead define `class <NAME>(BaseIndexer)` in `src/indexers/<name>.py` (see `torrentland.py`); it takes priority over the standard template.
+
+### Matrix (optional)
+
+When `MATRIX_USER_ID` and `MATRIX_ACCESS_TOKEN` are set, announces are also sent as notices to a Matrix room per indexer, derived from the class name: `MyIndexer` → `#telegramircrr-myindexer:matrix.org` (the domain is `MATRIX_ROOM_DOMAIN`). The rooms must already exist and the bot must be able to join them (e.g. be invited if they are invite-only). Encrypted rooms are not supported.
 
 ## Running with Docker
 
@@ -84,6 +92,10 @@ services:
       ANNOUNCE_OVERWRITE_FQDN: #optional
       APPEND_INDEXER_NAME_TO_ANNOUNCE_TITLE: #optional
       APPRISE_URL: #optional
+      MATRIX_USER_ID: #optional
+      MATRIX_ACCESS_TOKEN: #optional
+      MATRIX_HOMESERVER: #optional
+      MATRIX_ROOM_DOMAIN: #optional
     volumes:
       - /path/to/tg_announcer_config:/app/irc
       - /path/to/log_path:/app/logs/app.log # optional
@@ -107,6 +119,10 @@ docker run -d \
   -e ANNOUNCE_OVERWRITE_FQDN= `#optional` \
   -e APPEND_INDEXER_NAME_TO_ANNOUNCE_TITLE= `#optional` \
   -e APPRISE_URL= `#optional` \
+  -e MATRIX_USER_ID= `#optional` \
+  -e MATRIX_ACCESS_TOKEN= `#optional` \
+  -e MATRIX_HOMESERVER= `#optional` \
+  -e MATRIX_ROOM_DOMAIN= `#optional` \
   -v /path/to/tg_announcer_config:/app/irc \
   -v /path/to/log_path:/app/logs/app.log `#optional` \
   tYiZQMr93eYPp/telegramircrr:latest
@@ -142,6 +158,9 @@ src/
   irc_bot/
     ircbot.py          # IRC bot wrapper
     utils.py           # IRC channel name helper
+  matrix_bot/
+    matrixbot.py       # Matrix (matrix-nio) client wrapper
+    utils.py           # Matrix room alias helper
   mappers/
     indexer_mapper.py  # Loads channel → indexer mapping from config.yaml
 config.yaml            # Indexer mappings

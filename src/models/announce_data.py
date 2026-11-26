@@ -1,6 +1,7 @@
 import os
 import re
 from irc_bot.utils import irc_channel_for_indexer
+from matrix_bot.utils import matrix_alias_for_indexer
 
 
 _ANNOUNCE_OVERWRITE_FQDN = os.getenv("ANNOUNCE_OVERWRITE_FQDN")
@@ -63,6 +64,12 @@ class AnnounceData:
         return [name for name in _REQUIRED_FIELDS if not getattr(self, name)]
 
     def send_data_to_irc(self, indexer, irc):
+        irc.send_message(irc_channel_for_indexer(indexer), self.format_message())
+
+    async def send_data_to_matrix(self, indexer, matrix, domain):
+        await matrix.send_message(matrix_alias_for_indexer(indexer, domain), self.format_message())
+
+    def format_message(self) -> str:
         fields = {
             "Title": self.title,
             "Category": self.category,
@@ -77,5 +84,4 @@ class AnnounceData:
             "TVDBID": self.tvdb_id,
             "Tags": self.tags,
         }
-        message = " | ".join(f"{k}: [{v}]" for k, v in fields.items())
-        irc.send_message(irc_channel_for_indexer(indexer), message)
+        return " | ".join(f"{k}: [{v}]" for k, v in fields.items())

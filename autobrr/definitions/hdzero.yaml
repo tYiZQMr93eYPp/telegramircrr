@@ -3,7 +3,6 @@ version: 2
 #id: hdzero
 name: HDZERO
 identifier: hdzero
-implementation: matrix
 description: HDZERO (HDZERO) is a Private Torrent Tracker for MOVIES / TV
 language: es-es
 urls:
@@ -11,7 +10,7 @@ urls:
 privacy: private
 protocol: torrent
 supports:
-  - matrix
+  - irc
   - rss
 # source: UNIT3D
 settings:
@@ -21,13 +20,37 @@ settings:
     label: RSS key
     help: "Go to Profile > Settings > RSS Key, and copy your RSS Key"
 
-matrix:
-  network: Matrix
-  homeserver: https://matrix.org
-  rooms:
-    - name: "#telegramircrr-hdzero:matrix.org"
+irc:
+  network: Local
+  server: irc
+  port: 6667
+  tls: false
+  auth:
+    mechanism: NICKSERV
+  settings:
+    - name: nick
+      type: text
+      required: false
+      label: Nick
+      help: Bot nick. Eg. user_bot
+
+    - name: auth.account
+      type: text
+      required: false
+      label: NickServ Account
+      help: NickServ account. Make sure to group your user and bot.
+
+    - name: auth.password
+      type: secret
+      required: false
+      label: NickServ Password
+      help: NickServ password
+
+  channels:
+    - name: "#hdzero_announce"
       announcers:
-        - "@9thf3ksvvad8dv6zurrcrx:matrix.org"
+        - tracker_announcer_bot
+        - telegramircrr_dev
       parse:
         type: single
         lines:
